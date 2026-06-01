@@ -1,0 +1,93 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grocery List</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://tailwindcss.com"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Grocery List</h1>
+
+        <form method="post" action="/add">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="category" placeholder="Category" required>
+            <input type="number" step="0.01" name="price_per_gram" placeholder="Price per gram" required>
+            <input type="number" step="0.1" name="weight_grams" placeholder="Weight (g)" required>
+
+            <label>
+                <input type="checkbox" name="organic"> Organic
+            </label>
+
+            <select name="availability" required>
+                <option value="" disabled selected>Select status</option>
+                <option value="Need to buy">Need to buy</option>
+                <option value="Out of stock">Out of stock</option>
+                <option value="Already bought">Already bought</option>
+            </select>
+
+            <button type="submit">Add Item</button>
+        </form>
+
+        {% if items %}
+            <h2>🧾 Your Grocery Items</h2>
+
+            <div class="items-grid">
+                {% for item in items %}
+                <div class="grocery-item">
+                    <h3>{{ item.name }}</h3>
+
+                    <p><strong>Category:</strong> {{ item.category }}</p>
+
+                    <p>
+                        <strong>Weight:</strong>
+                        {{ "%.2f"|format(item.details.weight_grams) }}g
+                    </p>
+
+                    <p>
+                        <strong>Price/g:</strong>
+                        ${{ "%.2f"|format(item.price_per_gram) }}
+                    </p>
+
+                    <p>
+                        <strong>Total:</strong>
+                        ${{ "%.2f"|format(item.price_per_gram * item.details.weight_grams) }}
+                    </p>
+
+                    <p>
+                        <strong>Organic:</strong>
+                        {{ "Yes" if item.details.organic else "No" }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        {{ item.details.availability }}
+                    </p>
+
+                    <div class="actions">
+                        <form method="post" action="/delete/{{ item.id }}">
+                            <button class="delete-btn" type="submit">
+                                Delete
+                            </button>
+                        </form>
+
+                        <form method="get" action="/edit/{{ item.id }}">
+                            <button class="edit-btn" type="submit">
+                                Edit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p class="empty-message">
+                No items in your grocery list yet.
+            </p>
+        {% endif %}
+    </div>
+</body>
+</html>

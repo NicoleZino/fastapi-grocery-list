@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #f5f5f5;
+    padding: 40px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #1f1f1f;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+}
+
+h1 {
+    color: #9ec5ff;
+    margin-bottom: 25px;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+input, select {
+    background: #2b2b2b;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+label {
+    font-weight: bold;
+}
+
+button {
+    background-color: #004282;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #0057aa;
+}
+
+.empty-message {
+    margin-top: 20px;
+    color: #ddd;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.grocery-item {
+    background: #2b2b2b;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #444;
+}
+
+.grocery-item h3 {
+    color: #9ec5ff;
+    margin-top: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-btn {
+    background: #d9534f;
+}
+
+.edit-btn {
+    background: #2d8cff;
+}
