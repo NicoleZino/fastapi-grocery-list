@@ -31,7 +31,11 @@ def save_items(items):
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     items = load_items()
-    return templates.TemplateResponse("index.html", {"request": request, "items": items})
+    # Add context= right here before the curly braces
+    return templates.TemplateResponse(
+        "index.html", 
+        context={"request": request, "items": items}
+    )
 
 @app.post("/add")
 def add_item(
@@ -78,8 +82,13 @@ def edit_item(request: Request, item_id: str):
     items = load_items()
     for item in items:
         if item.get("id") == item_id:
-            return templates.TemplateResponse("edit.html", {"request": request, "item": item})
+            # Add context= right here as well
+            return templates.TemplateResponse(
+                "edit.html", 
+                context={"request": request, "item": item}
+            )
     raise HTTPException(status_code=404, detail="Item not found")
+
 
 @app.post("/update/{item_id}")
 def update_item(
