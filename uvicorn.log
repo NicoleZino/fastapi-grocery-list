@@ -56,3 +56,5 @@ INFO:     127.0.0.1:53761 - "POST /update/08c630fd-80c9-4bf4-9f91-a8c2487fe87b H
 INFO:     127.0.0.1:53761 - "GET / HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59861 - "POST /delete/08c630fd-80c9-4bf4-9f91-a8c2487fe87b HTTP/1.1" 303 See Other
 INFO:     127.0.0.1:59861 - "GET / HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+ 

@@ -5,12 +5,16 @@ from fastapi.staticfiles import StaticFiles
 from models import GroceryItem, GroceryItemDetails
 import json
 import os
+import uuid  # <-- Added to generate unique IDs for your items
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DATA_FILE = "grocery_data.json"
+# FIX 1: Use an absolute directory path so Render can safely read and write your JSON file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "grocery_data.json")
+
 def load_items():
     if os.path.exists(DATA_FILE):
         try:
@@ -48,15 +52,24 @@ def add_item(
             availability=availability
         )
     )
+    
+    # Convert Pydantic model to a python dictionary
+    item_dict = new_item.model_dump(mode="json")
+    
+    # FIX 2: Ensure every added item gets a unique 'id' key if your Pydantic model doesn't supply one
+    if "id" not in item_dict or not item_dict["id"]:
+        item_dict["id"] = str(uuid.uuid4())
+        
     items = load_items()
-    items.append(new_item.model_dump(mode="json")) # Convert Pydantic model to dict
+    items.append(item_dict) 
     save_items(items) 
     return RedirectResponse("/", status_code=303)
 
 @app.post("/delete/{item_id}")
 def delete_item(item_id: str):
     items = load_items()
-    items = [item for item in items if item["id"] != item_id]
+    # Using .get() prevents the application from crashing if an ID is missing
+    items = [item for item in items if item.get("id") != item_id]
     save_items(items)
     return RedirectResponse("/", status_code=303)
 
@@ -64,7 +77,7 @@ def delete_item(item_id: str):
 def edit_item(request: Request, item_id: str):
     items = load_items()
     for item in items:
-        if item["id"] == item_id:
+        if item.get("id") == item_id:
             return templates.TemplateResponse("edit.html", {"request": request, "item": item})
     raise HTTPException(status_code=404, detail="Item not found")
 
@@ -80,7 +93,7 @@ def update_item(
 ):
     items = load_items()
     for i, item in enumerate(items):
-        if item["id"] == item_id:
+        if item.get("id") == item_id:
             items[i]["name"] = name
             items[i]["category"] = category
             items[i]["price_per_gram"] = price_per_gram
